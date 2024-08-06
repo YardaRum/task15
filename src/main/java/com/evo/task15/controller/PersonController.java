@@ -1,5 +1,6 @@
 package com.evo.task15.controller;
 
+import com.evo.task15.dto.Message;
 import com.evo.task15.dto.Person;
 import com.evo.task15.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,12 @@ public class PersonController {
     @PutMapping("/person/{id}")
     public ResponseEntity<Person> updatePerson(@PathVariable int id, @RequestBody Person person) {
         HttpStatus status = repository.existsById(id) ? HttpStatus.OK : HttpStatus.CREATED;
-        return new ResponseEntity(repository.save(person), status);
+        Person temp = repository.findById(id).orElse(person);
+        temp.setFirstname(person.getFirstname());
+        temp.setSurname(person.getSurname());
+        temp.setLastname(person.getLastname());
+        temp.setBirthday(person.getBirthday());
+        return new ResponseEntity(repository.save(temp), status);
     }
 
     @DeleteMapping("/person/{id}")

@@ -34,7 +34,11 @@ public class MessageController {
     @PutMapping("/message/{id}")
     public ResponseEntity<Message> updateMessage(@PathVariable int id, @RequestBody Message message) {
         HttpStatus status = repository.existsById(id) ? HttpStatus.OK : HttpStatus.CREATED;
-        return new ResponseEntity(repository.save(message), status);
+        Message temp = repository.findById(id).orElse(message);
+        temp.setText(message.getText());
+        temp.setTime(message.getTime());
+        temp.setTitle(message.getTitle());
+        return new ResponseEntity(repository.save(temp), status);
     }
 
     @DeleteMapping("/message/{id}")
